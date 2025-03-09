@@ -13,7 +13,8 @@ sys.path.insert(0, dirn(dirn(os.path.abspath(__file__))))
 
 from utils import write_file
 
-atom_template = textwrap.dedent("""\
+atom_template = textwrap.dedent(
+    """\
     <?xml version="1.0" encoding="utf-8"?>
     <feed xmlns="http://www.w3.org/2005/Atom">
         <link rel="self" href="http://ytdl-org.github.io/youtube-dl/update/releases.atom" />
@@ -21,9 +22,11 @@ atom_template = textwrap.dedent("""\
         <id>https://yt-dl.org/feed/youtube-dl-updates-feed</id>
         <updated>@TIMESTAMP@</updated>
         @ENTRIES@
-    </feed>""")
+    </feed>"""
+)
 
-entry_template = textwrap.dedent("""
+entry_template = textwrap.dedent(
+    """
     <entry>
         <id>https://yt-dl.org/feed/youtube-dl-updates-feed/youtube-dl-@VERSION@</id>
         <title>New version @VERSION@</title>
@@ -38,20 +41,21 @@ entry_template = textwrap.dedent("""
         </author>
         <updated>@TIMESTAMP@</updated>
     </entry>
-    """)
+    """
+)
 
 now = datetime.datetime.now()
-now_iso = now.isoformat() + 'Z'
+now_iso = now.isoformat() + "Z"
 
-atom_template = atom_template.replace('@TIMESTAMP@', now_iso)
+atom_template = atom_template.replace("@TIMESTAMP@", now_iso)
 
-versions_info = json.load(open('update/versions.json'))
-versions = list(versions_info['versions'].keys())
+versions_info = json.load(open("update/versions.json"))
+versions = list(versions_info["versions"].keys())
 versions.sort()
 
 entries = []
 for v in versions:
-    fields = v.split('.')
+    fields = v.split(".")
     year, month, day = map(int, fields[:3])
     faked = 0
     patchlevel = 0
@@ -69,13 +73,19 @@ for v in versions:
             patchlevel = int(fields[3])
         except ValueError:
             patchlevel = 1
-    timestamp = '%04d-%02d-%02dT00:%02d:%02dZ' % (year, month, day, faked, patchlevel)
+    timestamp = "%04d-%02d-%02dT00:%02d:%02dZ" % (
+        year,
+        month,
+        day,
+        faked,
+        patchlevel,
+    )
 
-    entry = entry_template.replace('@TIMESTAMP@', timestamp)
-    entry = entry.replace('@VERSION@', v)
+    entry = entry_template.replace("@TIMESTAMP@", timestamp)
+    entry = entry.replace("@VERSION@", v)
     entries.append(entry)
 
-entries_str = textwrap.indent(''.join(entries), '\t')
-atom_template = atom_template.replace('@ENTRIES@', entries_str)
+entries_str = textwrap.indent("".join(entries), "\t")
+atom_template = atom_template.replace("@ENTRIES@", entries_str)
 
-write_file('update/releases.atom', atom_template)
+write_file("update/releases.atom", atom_template)

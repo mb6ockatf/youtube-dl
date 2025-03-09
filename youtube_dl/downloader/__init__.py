@@ -6,7 +6,7 @@ from ..utils import (
 
 
 def get_suitable_downloader(info_dict, params={}):
-    info_dict['protocol'] = determine_protocol(info_dict)
+    info_dict["protocol"] = determine_protocol(info_dict)
     info_copy = info_dict.copy()
     return _get_suitable_downloader(info_copy, params)
 
@@ -27,15 +27,15 @@ from .external import (
 )
 
 PROTOCOL_MAP = {
-    'rtmp': RtmpFD,
-    'm3u8_native': HlsFD,
-    'm3u8': FFmpegFD,
-    'mms': RtspFD,
-    'rtsp': RtspFD,
-    'f4m': F4mFD,
-    'http_dash_segments': DashSegmentsFD,
-    'ism': IsmFD,
-    'niconico_dmc': NiconicoDmcFD,
+    "rtmp": RtmpFD,
+    "m3u8_native": HlsFD,
+    "m3u8": FFmpegFD,
+    "mms": RtspFD,
+    "rtsp": RtspFD,
+    "f4m": F4mFD,
+    "http_dash_segments": DashSegmentsFD,
+    "ism": IsmFD,
+    "niconico_dmc": NiconicoDmcFD,
 }
 
 
@@ -45,29 +45,29 @@ def _get_suitable_downloader(info_dict, params={}):
     # if (info_dict.get('start_time') or info_dict.get('end_time')) and not info_dict.get('requested_formats') and FFmpegFD.can_download(info_dict):
     #     return FFmpegFD
 
-    external_downloader = params.get('external_downloader')
+    external_downloader = params.get("external_downloader")
     if external_downloader is not None:
         ed = get_external_downloader(external_downloader)
         if ed.can_download(info_dict):
             return ed
         # Avoid using unwanted args since external_downloader was rejected
-        if params.get('external_downloader_args'):
-            params['external_downloader_args'] = None
+        if params.get("external_downloader_args"):
+            params["external_downloader_args"] = None
 
-    protocol = info_dict['protocol']
-    if protocol.startswith('m3u8') and info_dict.get('is_live'):
+    protocol = info_dict["protocol"]
+    if protocol.startswith("m3u8") and info_dict.get("is_live"):
         return FFmpegFD
 
-    if protocol == 'm3u8' and params.get('hls_prefer_native') is True:
+    if protocol == "m3u8" and params.get("hls_prefer_native") is True:
         return HlsFD
 
-    if protocol == 'm3u8_native' and params.get('hls_prefer_native') is False:
+    if protocol == "m3u8_native" and params.get("hls_prefer_native") is False:
         return FFmpegFD
 
     return PROTOCOL_MAP.get(protocol, HttpFD)
 
 
 __all__ = [
-    'get_suitable_downloader',
-    'FileDownloader',
+    "get_suitable_downloader",
+    "FileDownloader",
 ]

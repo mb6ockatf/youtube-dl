@@ -23,7 +23,7 @@ def build_completion(opt_parser):
             # for every long flag
             opts_flag.append(option.get_opt_string())
     template = read_file(BASH_COMPLETION_TEMPLATE)
-    with open(BASH_COMPLETION_FILE, "w", encoding='utf-8') as f:
+    with open(BASH_COMPLETION_FILE, "w", encoding="utf-8") as f:
         # just using the special char
         filled_template = template.replace("{{flags}}", " ".join(opts_flag))
         f.write(filled_template)

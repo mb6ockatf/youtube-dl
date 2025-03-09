@@ -9,18 +9,19 @@ from utils import read_file, read_version, write_file
 
 
 def main():
-    parser = optparse.OptionParser(usage='%prog INFILE OUTFILE')
+    parser = optparse.OptionParser(usage="%prog INFILE OUTFILE")
     options, args = parser.parse_args()
     if len(args) != 2:
-        parser.error('Expected an input and an output filename')
+        parser.error("Expected an input and an output filename")
 
     infile, outfile = args
 
     issue_template_tmpl = read_file(infile)
 
-    out = issue_template_tmpl % {'version': read_version()}
+    out = issue_template_tmpl % {"version": read_version()}
 
     write_file(outfile, out)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

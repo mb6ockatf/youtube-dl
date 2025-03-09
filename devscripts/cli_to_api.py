@@ -15,6 +15,7 @@ $
 # Allow direct execution
 import os
 import sys
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import youtube_dl
@@ -29,7 +30,7 @@ def cli_to_api(*opts):
     # return options via this Exception
     class ParseYTDLResult(Exception):
         def __init__(self, result):
-            super(ParseYTDLResult, self).__init__('result')
+            super(ParseYTDLResult, self).__init__("result")
             self.opts = result
 
     # replacement constructor that raises ParseYTDLResult
@@ -54,12 +55,20 @@ def cli_to_api(*opts):
         if a == b:
             return False
         if a is None and repr(type(object)).endswith(".utils.DateRange'>"):
-            return '0001-01-01 - 9999-12-31' != '{0}'.format(b)
+            return "0001-01-01 - 9999-12-31" != "{0}".format(b)
         return a != b
 
-    diff = dict((k, v) for k, v in parsed_options(opts).items() if neq_opt(default[k], v))
-    if 'postprocessors' in diff:
-        diff['postprocessors'] = [pp for pp in diff['postprocessors'] if pp not in default['postprocessors']]
+    diff = dict(
+        (k, v)
+        for k, v in parsed_options(opts).items()
+        if neq_opt(default[k], v)
+    )
+    if "postprocessors" in diff:
+        diff["postprocessors"] = [
+            pp
+            for pp in diff["postprocessors"]
+            if pp not in default["postprocessors"]
+        ]
     return diff
 
 
@@ -71,7 +80,7 @@ def main():
 
     def format(object, context, maxlevels, level):
         if repr(type(object)).endswith(".utils.DateRange'>"):
-            return '{0}: {1}>'.format(repr(object)[:-2], object), True, False
+            return "{0}: {1}>".format(repr(object)[:-2], object), True, False
         return super_format(object, context, maxlevels, level)
 
     pprint.format = format
@@ -79,5 +88,5 @@ def main():
     pprint.pprint(cli_to_api(*sys.argv))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
